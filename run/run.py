@@ -43,15 +43,50 @@ def StopCriteriaVector(names, varsDict):
 
 # Substitute value of varName to varValue in scheme fileName
 def SubstituteValue(fileName, varName, varValue):
-    file = open(fileName, 'r', encoding = 'iso8859_15')
-    text = file.read()
+    codecs = ['latin_1', 'utf_16_le']
+
+    for c in codecs:
+        file = open(fileName, 'r', encoding = c)
+        try:
+            text = file.read()
+        except UnicodeDecodeError:
+            # Wrong encode
+            pass
+        else:
+            # Check encode
+            if text[:7] == 'Version':
+                codec = c
+                break
+            else:
+                close(file)
+    else:
+        raise ValueError("Can not open file properly: {}".format(fileName))
     text = re.sub(r'(.*\.param {})=[0-9.+-e]*'.format(varName), r'\1={}'.format(varValue), text)
-    with open(fileName, 'w', encoding='iso8859_15') as file:
+    with open(fileName, 'w', encoding=codec) as file:
         file.write(text)
 
 # Get value of varName from scheme fileName
 def GetValue(fileName, varName):
-    file = open(fileName, 'r', encoding = 'utf_16_le')
+    codecs = ['latin_1', 'utf_16_le']
+
+    for c in codecs:
+        file = open(fileName, 'r', encoding = c)
+        try:
+            text = file.read()
+        except UnicodeDecodeError:
+            # Wrong encode
+            pass
+        else:
+            # Check encode
+            if text[:7] == 'Circuit':
+                codec = c
+                break
+            else:
+                close(file)
+    else:
+        raise ValueError("Can not open file properly: {}".format(fileName))
+    
+    file = open(fileName, 'r', encoding = codec)
     text = file.read()
     m = re.search(r'{}: .*=([0-9.+-e]*) (FROM|at).*'.format(varName), text)
     if m == None:
