@@ -1,5 +1,5 @@
 # electrotherm
-Stepping Motors electro-thermal simulation schemes for LTSpice Simulator
+Stepper motors electro-thermal simulation schemes for LTSpice Simulator
 
 Schemes:
 * MotorControlHolding.asc - scheme simulates full bridge for phase of step motor in holding mode
