@@ -58,7 +58,7 @@ def SubstituteValue(fileName, varName, varValue):
                 codec = c
                 break
             else:
-                close(file)
+                file.close()
     else:
         raise ValueError("Can not open file properly: {}".format(fileName))
     text = re.sub(r'(.*\.param {})=[0-9.+-e]*'.format(varName), r'\1={}'.format(varValue), text)
@@ -82,7 +82,7 @@ def GetValue(fileName, varName):
                 codec = c
                 break
             else:
-                close(file)
+                file.close()
     else:
         raise ValueError("Can not open file properly: {}".format(fileName))
     
